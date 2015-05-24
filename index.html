@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>表白</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+
+		<link rel="stylesheet" href="css/mui.min.css">
+	</head>
+
+	<body>
+		<script src="js/mui.min.js"></script>
+		<script src="js/app.js"></script>
+		<script>
+			(function($) {
+				$.init();
+				$.plusReady(function() {
+					var settings = app.getSettings();
+					var state = app.getState();
+					if (settings.autoLogin && state.token && settings.gestures) {
+						$.openWindow({
+							url: 'unlock.html',
+							id: 'unlock'
+						});
+					} else if (settings.autoLogin && state.token) {
+						$.openWindow({
+							url: 'main.html',
+							id: 'main'
+						});
+					} else {
+						$.openWindow({
+							url: 'login.html',
+							id: 'login'
+						});
+					}
+					
+					plus.navigator.closeSplashscreen();
+					
+					//敲击顶部导航，内容区回到顶部
+					document.querySelector('header').addEventListener('doubletap',function () {
+						main.children()[0].evalJS('mui.scrollTo(0, 100)');
+						console.log('sss');
+					});
+					
+					var backButtonPress = 0;
+					$.back = function(event) {
+						backButtonPress++;
+						if (backButtonPress > 1) {
+							plus.runtime.quit();
+						} else {
+							plus.nativeUI.toast('再按一次退出应用');
+						}
+						setTimeout(function() {
+							backButtonPress = 0;
+						}, 1000);
+						return false;
+					};
+				});
+			}(mui));
+		</script>
+	</body>
+
+</html>
